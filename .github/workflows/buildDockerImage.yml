@@ -13,9 +13,9 @@ jobs:
             - uses: actions/checkout@v2
             - name: Build Docker image
               run: docker build -t identitykeeper .
-            - name: Push Docker image
-              run: docker tag identitykeeper ${{ secrets.DOCKER_USERNAME }}/identitykeeper:${{ github.sha }}
+            - name: Tag Docker image
+              run: docker tag identitykeeper ${{ secrets.DOCKER_USERNAME }}/identitykeeper:${{ env.IMAGE_TAG }}
             - name: Login to DockerHub
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             - name: Push Docker image
-              run: docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper:${{ github.sha }}
+              run: docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper:${{ env.IMAGE_TAG }}
