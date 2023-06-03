@@ -14,6 +14,7 @@ WORKDIR /src
 COPY ["./Api/IdentiyKeeper.csproj", "./"]
 RUN dotnet restore "IdentiyKeeper.csproj"
 COPY ./Api/ .
+COPY ./Grains/ ./Grains/
 WORKDIR "/src/."
 RUN dotnet build "IdentiyKeeper.csproj" -c Release -o /app/build
 

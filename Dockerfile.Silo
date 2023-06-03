@@ -14,6 +14,7 @@ WORKDIR /src
 COPY ["./silo/silo.csproj", "./"]
 RUN dotnet restore "silo.csproj"
 COPY ./silo/ .
+COPY ./Grains/ ./Grains/
 WORKDIR "/src/."
 RUN dotnet build "silo.csproj" -c Release -o /app/build
 
