@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "silo", "silo\silo.csproj", "{F086C457-60EE-48B8-973B-33E5AE83CBF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentiyKeeper", "Api\IdentiyKeeper.csproj", "{465608AE-FCA0-4644-9F8A-1FADEDA249B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grains", "Grains\Grains.csproj", "{0F6E0C20-959F-4309-B4EF-4367735DF4C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F086C457-60EE-48B8-973B-33E5AE83CBF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F086C457-60EE-48B8-973B-33E5AE83CBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F086C457-60EE-48B8-973B-33E5AE83CBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F086C457-60EE-48B8-973B-33E5AE83CBF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{465608AE-FCA0-4644-9F8A-1FADEDA249B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{465608AE-FCA0-4644-9F8A-1FADEDA249B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{465608AE-FCA0-4644-9F8A-1FADEDA249B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{465608AE-FCA0-4644-9F8A-1FADEDA249B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F6E0C20-959F-4309-B4EF-4367735DF4C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F6E0C20-959F-4309-B4EF-4367735DF4C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F6E0C20-959F-4309-B4EF-4367735DF4C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F6E0C20-959F-4309-B4EF-4367735DF4C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

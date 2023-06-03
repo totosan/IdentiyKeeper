@@ -11,16 +11,16 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["IdentiyKeeper.csproj", "./"]
-RUN dotnet restore "IdentiyKeeper.csproj"
-COPY . .
+COPY ["./silo/silo.csproj", "./"]
+RUN dotnet restore "silo.csproj"
+COPY ./silo/ .
 WORKDIR "/src/."
-RUN dotnet build "IdentiyKeeper.csproj" -c Release -o /app/build
+RUN dotnet build "silo.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "IdentiyKeeper.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "silo.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "IdentiyKeeper.dll"]
+ENTRYPOINT ["dotnet", "silo.dll"]
