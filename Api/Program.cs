@@ -14,9 +14,13 @@ if (builder.Environment.IsDevelopment())
     });
 } else
 {
-    builder.Host.UseOrleansClient(builder =>
+    builder.Host.UseOrleansClient(client =>
     {
-        builder.Configure<ClusterOptions>(options =>
+        var envCnn = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+        
+        var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
+        client.UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString));
+        client.Configure<ClusterOptions>(options =>
         {
             options.ClusterId = "url-shortener";
             options.ServiceId = "urls";
