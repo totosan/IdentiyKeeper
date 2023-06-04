@@ -14,11 +14,14 @@ env:
     registryUsername: "totosan"
     registryPassword: ${{ secrets.DOCKER_PASSWORD }}
     environmentName: "identitykeeperEnv"
+    AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
 jobs:
     create-ACA:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+            - name: install extension az containerapp
+              run: az extension add --name containerapp
             - name: create ACA infrastructure
               run: ./deployment_assets/deployToACA.sh
