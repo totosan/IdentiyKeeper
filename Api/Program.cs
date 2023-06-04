@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Orleans.Runtime;
 using Orleans.Configuration;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Host.UseOrleansClient(builder =>
     {
-        builder.UseLocalhostClustering();
+        builder.UseStaticClustering(new IPEndPoint(IPAddress.Loopback, 30000));
     });
 } else
 {

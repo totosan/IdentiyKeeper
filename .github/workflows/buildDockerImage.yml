@@ -12,7 +12,9 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Build Docker image
-              run: docker build -f ./Dockerfile.Api -t identitykeeper-client . && docker build -f ./Dockerfile.Silo -t identitykeeper-server .
+              run: |
+                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Api -t identitykeeper-client . && \
+                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Silo -t identitykeeper-server .
             - name: Tag Docker image
               run: |
                 docker tag identitykeeper-client ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \

@@ -1,4 +1,5 @@
-﻿using Orleans;
+﻿using System.Net;
+using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
 
@@ -8,7 +9,7 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Host.UseOrleans(builder =>
     {
-        builder.UseLocalhostClustering();
+        builder.UseDevelopmentClustering(new IPEndPoint(IPAddress.Loopback, 30000));
         builder.AddMemoryGrainStorage("urls");
     }).ConfigureLogging(logging =>
     {
