@@ -2,7 +2,7 @@
 name: init ACA infrastructure
 
 on:
-    push:
+    workflow_dispatch:
 
 permissions:
     contents: read
