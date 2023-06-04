@@ -14,13 +14,13 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./Api/IdentiyKeeper.csproj", "./"]
 COPY ./Grains/ ./../Grains
-RUN dotnet restore "IdentiyKeeper.csproj" -a $TARGETARCH
+RUN dotnet restore "IdentiyKeeper.csproj" 
 COPY ./Api/ .
 WORKDIR "/src/."
-RUN dotnet build "IdentiyKeeper.csproj" -c Release -o /app/build -a $TARGETARCH
+RUN dotnet build "IdentiyKeeper.csproj" -c Release -o /app/build 
 
 FROM build AS publish
-RUN dotnet publish "IdentiyKeeper.csproj" -c Release -o /app/publish /p:UseAppHost=false -a $TARGETARCH
+RUN dotnet publish "IdentiyKeeper.csproj" -c Release -o /app/publish /p:UseAppHost=false 
 
 FROM base AS final
 WORKDIR /app
