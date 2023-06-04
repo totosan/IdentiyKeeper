@@ -2,6 +2,9 @@ name: "IdentityKeeper Docker image"
 
 on:
   push:
+    paths:
+      - 'Dockerfile.Api'
+      - 'Dockerfile.Silo'
 
 env:
     #create image tag either for master branch or for any other branch
@@ -23,3 +26,9 @@ jobs:
               run: |
                 docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \
                 docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
+    update-ACA:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Update ACA
+              run: az containerapp update -n identitykeeper -g identitykeeper --image ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}

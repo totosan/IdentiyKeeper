@@ -1,0 +1,24 @@
+
+name: init ACA infrastructure
+
+on:
+    push:
+
+env:
+    resourceGroupName: "ORLEANS-ACA"
+    location: "westeurope"
+    appName: "identitykeeper-app"
+    siloName: "identitykeeper-server"
+    imageApp: "totosan/identitykeeper-client:latest"
+    imageSilo: "totosan/identitykeeper-server:latest"
+    registryUsername: "totosan"
+    registryPassword: ${{ secrets.DOCKER_PASSWORD }}
+    environmentName: "identitykeeperEnv"
+
+jobs:
+    create-ACA:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: create ACA infrastructure
+              run: ./deployment_assets/deployToACA.sh
