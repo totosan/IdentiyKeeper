@@ -2,6 +2,7 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 30000
 EXPOSE 11111
+EXPOSE 5049
 
 ARG TARGETARCH
 ENV ASPNETCORE_URLS=http://+:5049
@@ -15,13 +16,13 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./silo/silo.csproj", "./"]
 COPY ./Grains/ ./../Grains
-RUN dotnet restore "silo.csproj" -a $TARGETARCH
+RUN dotnet restore "silo.csproj" 
 COPY ./silo/ .
 WORKDIR "/src/."
-RUN dotnet build "silo.csproj" -c Release -o /app/build -a $TARGETARCH
+RUN dotnet build "silo.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "silo.csproj" -c Release -o /app/publish /p:UseAppHost=false -a $TARGETARCH
+RUN dotnet publish "silo.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
