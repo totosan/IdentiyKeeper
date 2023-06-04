@@ -9,7 +9,9 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Host.UseOrleans(builder =>
     {
-        builder.UseDevelopmentClustering( primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111));
+        builder.UseDevelopmentClustering( primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111))
+        .ConfigureEndpoints(IPAddress.Loopback, 11111,30000);
+
         builder.AddMemoryGrainStorage("urls");
     }).ConfigureLogging(logging =>
     {

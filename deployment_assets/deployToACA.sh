@@ -3,7 +3,7 @@ location="westeurope"
 appName="identitykeeper-app"
 image="totosan/identitykeeper:latest"
 registryUsername="totosan"
-registryPassword="QxT638_"
+registryPassword=$REGISTRY_PWD
 environmentName="identitykeeperEnv"
 
 az containerapp env create -g $resourceGroupName -n $environmentName --logs-destination none
