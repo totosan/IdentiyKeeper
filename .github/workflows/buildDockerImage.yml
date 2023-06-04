@@ -12,20 +12,10 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Docker Setup Buildx
-              # You may pin to the exact commit or the version.
-              # uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c
               uses: docker/setup-buildx-action@v2.5.0
-            - name: Build Docker image
-              run: |
-                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Api -t identitykeeper-client . && \
-                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Silo -t identitykeeper-server .
-            - name: Tag Docker image
-              run: |
-                docker tag identitykeeper-client ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \
-                docker tag identitykeeper-server ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
             - name: Login to DockerHub
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            - name: Push Docker image
+            - name: Build & Push Docker image
               run: |
-                docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \
-                docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
+                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Api -t totosan/identitykeeper-client:${{ env.IMAGE_TAG }} . --push && \
+                docker buildx build --platform linux/amd64,linux/arm64 -f ./Dockerfile.Silo -t totosan/identitykeeper-server:${{ env.IMAGE_TAG }} . --push
