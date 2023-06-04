@@ -13,9 +13,9 @@ env:
     location: "westeurope"
     appName: "identitykeeper-app"
     siloName: "identitykeeper-server"
-    imageApp: "totosan/identitykeeper-client:latest"
-    imageSilo: "totosan/identitykeeper-server:latest"
-    registryUsername: "totosan"
+    imageApp: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:latest"
+    imageSilo: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:latest"
+    registryUsername: "${{ secrets.DOCKER_USERNAME }}"
     registryPassword: ${{ secrets.DOCKER_PASSWORD }}
     environmentName: "identitykeeperEnv"
     AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}

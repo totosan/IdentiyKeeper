@@ -9,26 +9,42 @@ on:
 env:
     #create image tag either for master branch or for any other branch
     IMAGE_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || github.sha }}
+    resourceGroupName: "ORLEANS-ACA"
+    location: "westeurope"
+    appName: "identitykeeper-app"
+    siloName: "identitykeeper-server"
+    imageApp: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-client"
+    imageSilo: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-server"
+    registryUsername: "${{ secrets.DOCKER_USERNAME }}"
+    registryPassword: ${{ secrets.DOCKER_PASSWORD }}
+    environmentName: "identitykeeperEnv"
+    AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+
 jobs:
     build-docker-image:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
             - name: Build Docker image
-              run: docker build -f ./Dockerfile.Api -t identitykeeper-client . && docker build -f ./Dockerfile.Silo -t identitykeeper-server .
+              run: |
+                docker build -f ./Dockerfile.Api -t ${{ env.appName }} . && \
+                docker build -f ./Dockerfile.Silo -t ${{ env.siloName }} .
             - name: Tag Docker image
               run: |
-                docker tag identitykeeper-client ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \
-                docker tag identitykeeper-server ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
+                docker tag ${{ env.appName }} ${{ env.imageApp }}:${{ env.IMAGE_TAG }} && \
+                docker tag ${{ env.appName }} ${{ env.imageSilo }}:${{ env.IMAGE_TAG }}
             - name: Login to DockerHub
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             - name: Push Docker image
               run: |
-                docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:${{ env.IMAGE_TAG }} && \
-                docker push ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
+                docker push ${{ env.imageApp }}:${{ env.IMAGE_TAG }} && \
+                docker push ${{ env.imageSilo }}:${{ env.IMAGE_TAG }}
     update-ACA:
         runs-on: ubuntu-latest
+        needs: build-docker-image
         steps:
             - uses: actions/checkout@v3
             - name: Update ACA
-              run: az containerapp update -n identitykeeper -g identitykeeper --image ${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:${{ env.IMAGE_TAG }}
+              run: |
+                az containerapp update -n ${{ env.siloName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageSilo }}:${{ env.IMAGE_TAG }} && \
+                az containerapp update -n ${{ env.appName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageApp }}:${{ env.IMAGE_TAG }} 
