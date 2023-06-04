@@ -60,4 +60,4 @@ jobs:
                 --target-port 80 \
                 --ingress external \
                 --environment ${{ env.environmentName }} \
-                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
+                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }} "ASPNETCORE_URLS=http://+:80;https://+:443"
