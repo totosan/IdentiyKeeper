@@ -9,6 +9,7 @@ registryPassword=$REGISTRY_PWD
 environmentName="identitykeeperEnv"
 
 az containerapp env create -g $resourceGroupName -n $environmentName --logs-destination none
+# silo
 az containerapp create \
     --resource-group $resourceGroupName \
     --name $siloName \
@@ -20,6 +21,7 @@ az containerapp create \
     --min-replicas 1 \
     --env-vars "AZURE_STORAGE_CONNECTION_STRING="$AZURE_STORAGE_CONNECTION_STRING
 
+# app
 az containerapp create \
     --resource-group $resourceGroupName \
     --name $appName \
@@ -27,7 +29,7 @@ az containerapp create \
     --registry-server docker.io \
     --registry-username $registryUsername \
     --registry-password $registryPassword \
-    --target-port 5049 \
+    --target-port 80 \
     --ingress external \
     --environment $environmentName \
     --env-vars "AZURE_STORAGE_CONNECTION_STRING="$AZURE_STORAGE_CONNECTION_STRING
