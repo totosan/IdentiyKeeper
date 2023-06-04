@@ -1,7 +1,9 @@
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 5049
+EXPOSE 30000
+EXPOSE 11111
 
+ARG TARGETPLATFORM
 ENV ASPNETCORE_URLS=http://+:5049
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
@@ -13,13 +15,13 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./silo/silo.csproj", "./"]
 COPY ./Grains/ ./../Grains
-RUN dotnet restore "silo.csproj"
+RUN dotnet restore "silo.csproj" -a $TARGETPLATFORM
 COPY ./silo/ .
 WORKDIR "/src/."
-RUN dotnet build "silo.csproj" -c Release -o /app/build
+RUN dotnet build "silo.csproj" -c Release -o /app/build -a $TARGETPLATFORM
 
 FROM build AS publish
-RUN dotnet publish "silo.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "silo.csproj" -c Release -o /app/publish /p:UseAppHost=false -a $TARGETPLATFORM
 
 FROM base AS final
 WORKDIR /app
