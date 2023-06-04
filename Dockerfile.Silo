@@ -12,9 +12,9 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./silo/silo.csproj", "./"]
+COPY ./Grains/ ./../Grains
 RUN dotnet restore "silo.csproj"
 COPY ./silo/ .
-COPY ./Grains/ ./Grains/
 WORKDIR "/src/."
 RUN dotnet build "silo.csproj" -c Release -o /app/build
 
