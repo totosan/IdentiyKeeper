@@ -7,7 +7,7 @@ env:
     #create image tag either for master branch or for any other branch
     IMAGE_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || github.sha }}
 jobs:
-    build:
+    build-docker-images:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
