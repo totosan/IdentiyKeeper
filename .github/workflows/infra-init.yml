@@ -3,7 +3,7 @@ name: init ACA infrastructure
 
 on:
     push:
-        
+
 permissions:
     contents: read
     pages: write
@@ -33,5 +33,31 @@ jobs:
                 subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             - name: install extension az containerapp
               run: az extension add --name containerapp
-            - name: create ACA infrastructure
-              run: ./deployment_assets/deployToACA.sh
+            - name: create ACA Environment
+              run: |
+                az containerapp env create -g ${{ env.resourceGroupName }} -n ${{ env.environmentName }} --logs-destination none
+            - name: create ACA silo app
+              run: |
+                az containerapp create \
+                    --resource-group ${{ env.resourceGroupName }} \
+                    --name ${{ env.siloName }} \
+                    --image ${{ env.imageSilo }} \
+                    --registry-server docker.io \
+                    --registry-username ${{ env.registryUsername }} \
+                    --registry-password ${{ env.registryPassword }} \
+                    --environment ${{ env.environmentName }} \
+                    --min-replicas 1 \
+                    --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
+            - name: create ACA app
+              run: |
+                az containerapp create \
+                --resource-group ${{ env.resourceGroupName }} \
+                --name ${{ env.appName }} \
+                --image ${{ env.imageApp }} \
+                --registry-server docker.io \
+                --registry-username ${{ env.registryUsername }} \
+                --registry-password ${{ env.registryPassword }} \
+                --target-port 80 \
+                --ingress external \
+                --environment ${{ env.environmentName }} \
+                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
