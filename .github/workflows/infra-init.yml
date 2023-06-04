@@ -3,7 +3,11 @@ name: init ACA infrastructure
 
 on:
     push:
-
+        
+permissions:
+    contents: read
+    pages: write
+    id-token: write
 env:
     resourceGroupName: "ORLEANS-ACA"
     location: "westeurope"
