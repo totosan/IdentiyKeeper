@@ -68,5 +68,62 @@ app.MapGet("/go/{shortenedRouteSegment}",
         return Results.Redirect($"http://{url}");
     });
 
+app.MapPost("/user",
+    async (IGrainFactory grains, UserIdentity userIdentity) =>
+    {
+        // Create a grain for the user identity
+        var userGrain = grains.GetGrain<IUserIdentityGrain>(userIdentity.Name);
+
+        if(userGrain.GetActionName().Result == "Create")
+        {
+            return Results.BadRequest("User already exists");
+        }
+        // Set the user's name, email, and action name
+        await userGrain.SetName(userIdentity.Name);
+        await userGrain.SetEmail(userIdentity.Email);
+        await userGrain.SetActionName("Create");
+
+        // Return the user's name, email, and action name
+        return Results.Ok(new
+        {
+            Name = await userGrain.GetName(),
+            Email = await userGrain.GetEmail(),
+            ActionName = await userGrain.GetActionName()
+        });
+    });
+    app.MapPut("/user",
+    async (IGrainFactory grains, UserIdentity userIdentity) =>
+    {
+        // Create a grain for the user identity
+        var userGrain = grains.GetGrain<IUserIdentityGrain>(userIdentity.Name);
+
+        // Set the user's name, email, and action name
+        await userGrain.SetName(userIdentity.Name);
+        await userGrain.SetEmail(userIdentity.Email);
+        await userGrain.SetActionName("Update");
+
+        // Return the user's name, email, and action name
+        return Results.Ok(new
+        {
+            Name = await userGrain.GetName(),
+            Email = await userGrain.GetEmail(),
+            ActionName = await userGrain.GetActionName()
+        });
+    });
+
+app.MapGet("/user/{name}",
+    async (IGrainFactory grains, string name) =>
+    {
+        // Retrieve the user's grain
+        var userGrain = grains.GetGrain<IUserIdentityGrain>(name);
+
+        // Return the user's name, email, and action name
+        return Results.Ok(new
+        {
+            Name = await userGrain.GetName(),
+            Email = await userGrain.GetEmail(),
+            ActionName = await userGrain.GetActionName()
+        });
+    });
 app.Run();
 // </Endpoints>

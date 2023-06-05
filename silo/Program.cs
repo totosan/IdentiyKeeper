@@ -13,6 +13,8 @@ if (builder.Environment.IsDevelopment())
         .ConfigureEndpoints(IPAddress.Loopback, 11111,30000);
 
         builder.AddMemoryGrainStorage("urls");
+        builder.AddMemoryGrainStorage("users");
+
     }).ConfigureLogging(logging =>
     {
         logging.AddConsole();
@@ -36,9 +38,6 @@ if (builder.Environment.IsDevelopment())
         });
     });
 }
-
-// uncomment this if you dont mind hosting grains in the dashboard
-//builder.Services.DontHostGrainsHere();
 
 var app = builder.Build();
 
