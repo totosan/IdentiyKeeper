@@ -26,7 +26,8 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        },        {
+        },
+        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
