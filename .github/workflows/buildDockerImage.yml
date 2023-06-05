@@ -5,6 +5,8 @@ on:
     paths:
       - 'Dockerfile.Api'
       - 'Dockerfile.Silo'
+      - 'Api/**'
+      - 'silo/**'
   workflow_dispatch:
 
 permissions:
