@@ -37,7 +37,7 @@ jobs:
             - name: Tag Docker image
               run: |
                 docker tag ${{ env.appName }} ${{ env.imageApp }}:${{ env.IMAGE_TAG }} && \
-                docker tag ${{ env.appName }} ${{ env.imageSilo }}:${{ env.IMAGE_TAG }}
+                docker tag ${{ env.siloName }} ${{ env.imageSilo }}:${{ env.IMAGE_TAG }}
             - name: Login to DockerHub
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             - name: Push Docker image
