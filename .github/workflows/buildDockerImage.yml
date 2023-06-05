@@ -60,4 +60,4 @@ jobs:
             - name: Update ACA
               run: |
                 az containerapp update -n ${{ env.siloName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageSilo }}:${{ env.IMAGE_TAG }} && \
-                az containerapp update -n ${{ env.appName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageApp }}:${{ env.IMAGE_TAG }} 
+                az containerapp update -n ${{ env.appName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageApp }}:${{ env.IMAGE_TAG }} --target-port 8080
