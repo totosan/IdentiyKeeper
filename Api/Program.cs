@@ -12,6 +12,7 @@ if (builder.Environment.IsDevelopment())
     {
         builder.UseStaticClustering(new IPEndPoint(IPAddress.Loopback, 30000));
     });
+    Console.WriteLine("configured host builder for development local");
 } else
 {
     builder.Host.UseOrleansClient(client =>
@@ -29,7 +30,8 @@ if (builder.Environment.IsDevelopment())
     {
         logging.AddConsole();
         logging.SetMinimumLevel(LogLevel.Warning);
-    });
+    }); 
+    Console.WriteLine("configured host builder with Azure storage");
 }
 
 var app = builder.Build();
