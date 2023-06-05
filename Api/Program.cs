@@ -33,7 +33,10 @@ if (builder.Environment.IsDevelopment())
     }); 
     Console.WriteLine("configured host builder with Azure storage");
 }
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(8080);
+});
 var app = builder.Build();
 // </Configuration>
 
