@@ -7,7 +7,8 @@
             "request": "launch",
             "preLaunchTask": "buildApi",
             "program": "${workspaceFolder}/Api/bin/Debug/net7.0/IdentiyKeeper.dll",
-            "args": [],
+            "args": ["--urls",
+            "http://localhost:8082"],
             "cwd": "${workspaceFolder}/Api",
             "stopAtEntry": false,
             "serverReadyAction": {
@@ -31,7 +32,8 @@
             "preLaunchTask": "buildSilo",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/silo/bin/Debug/net7.0/silo.dll",
-            "args": [],
+            "args": ["--urls",
+            "http://localhost:8081"],
             "cwd": "${workspaceFolder}/silo",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
