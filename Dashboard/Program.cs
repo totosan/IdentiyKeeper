@@ -35,7 +35,7 @@ builder.Host.UseOrleans(siloBuilder =>
             var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
             builder
                 .UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString))
-                .UseDashboard()
+                .UseDashboard( op => op.HostSelf = false)
                 .Configure<ClusterOptions>(options =>
             {
                 options.ClusterId = "url-shortener";
