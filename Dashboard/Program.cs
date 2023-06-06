@@ -6,25 +6,11 @@ using Orleans.Hosting;
 
 var builder = WebApplication.CreateBuilder();
 
-builder.Host.UseOrleans(siloBuilder =>
+builder.Host.UseOrleans((Action<ISiloBuilder>)(siloBuilder =>
 {
     if (builder.Environment.IsDevelopment())
     {
-        builder.Host.UseOrleans(builder =>
-        {
-            builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111))
-            .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
-            .UseDashboard(op =>
-            {
-                op.HostSelf = true;
-                op.Port = 8080;
-            });
-
-        }).ConfigureLogging(logging =>
-        {
-            logging.AddConsole();
-            logging.SetMinimumLevel(LogLevel.Warning);
-        });
+        InitDevelopment(builder);
     }
     else
     {
@@ -35,18 +21,37 @@ builder.Host.UseOrleans(siloBuilder =>
             var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
             builder
                 .UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString))
-                .UseDashboard( op => op.HostSelf = false)
                 .Configure<ClusterOptions>(options =>
-            {
-                options.ClusterId = "url-shortener";
-                options.ServiceId = "urls";
-            });
+                    {
+                        options.ClusterId = "url-shortener";
+                        options.ServiceId = "urls";
+                    })
+                .UseDashboard( );
 
         });
     }
 
-});
+}));
 
 var app = builder.Build();
-app.MapGet("/dashboard", () => Results.Ok("Dashboard"));
+app.Map("/dashboard", d => d.UseOrleansDashboard());
 app.Run();
+
+static void InitDevelopment(WebApplicationBuilder builder)
+{
+    builder.Host.UseOrleans(builder =>
+    {
+        builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111))
+        .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
+        .UseDashboard(op =>
+        {
+            op.HostSelf = true;
+            op.Port = 8080;
+        });
+
+    }).ConfigureLogging(logging =>
+    {
+        logging.AddConsole();
+        logging.SetMinimumLevel(LogLevel.Warning);
+    });
+}
