@@ -75,3 +75,4 @@ jobs:
                 --ingress external \
                 --environment ${{ env.environmentName }} \
                 --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
+                
