@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Orleans.Runtime;
 using Orleans.Runtime.Placement;
 
-namespace Orleans.Hosting
+namespace TT.Orleans.Hosting
 {
     public static class DontHostGrainsHereServiceCollectionExtensions
     {
