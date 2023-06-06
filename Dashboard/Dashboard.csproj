@@ -18,4 +18,8 @@
     <PackageReference Include="OrleansDashboard" Version="7.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Grains\Grains.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -26,13 +26,18 @@ builder.Host.UseOrleans((Action<ISiloBuilder>)(siloBuilder =>
                         options.ClusterId = "url-shortener";
                         options.ServiceId = "urls";
                     })
-                .UseDashboard( );
+                .UseDashboard( )
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Warning);
+                });
 
         });
     }
 
 }));
-
+builder.Services.DontHostGrainsHere();
 var app = builder.Build();
 app.Map("/dashboard", d => d.UseOrleansDashboard());
 app.Run();
