@@ -37,7 +37,7 @@ builder.Host.UseOrleans((Action<ISiloBuilder>)(siloBuilder =>
     }
 
 }));
-builder.Services.DontHostGrainsHere();
+//builder.Services.DontHostGrainsHere();
 var app = builder.Build();
 app.Map("/dashboard", d => d.UseOrleansDashboard());
 app.Run();
