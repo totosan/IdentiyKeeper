@@ -13,6 +13,7 @@ env:
     location: "westeurope"
     appName: "identitykeeper-app"
     siloName: "identitykeeper-server"
+    dashboardName: "identitykeeper-dashboard"
     imageApp: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:latest"
     imageSilo: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:latest"
     imageDashboard: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-dashboard:latest"
@@ -66,7 +67,7 @@ jobs:
               run: |
                 az containerapp create \
                 --resource-group ${{ env.resourceGroupName }} \
-                --name Dashboard \
+                --name ${{ env.dashboardName }} \
                 --image ${{ env.imageDashboard }} \
                 --registry-server docker.io \
                 --registry-username ${{ env.registryUsername }} \
@@ -75,4 +76,3 @@ jobs:
                 --ingress external \
                 --environment ${{ env.environmentName }} \
                 --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
-                
