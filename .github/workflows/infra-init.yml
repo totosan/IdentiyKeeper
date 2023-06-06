@@ -15,6 +15,7 @@ env:
     siloName: "identitykeeper-server"
     imageApp: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:latest"
     imageSilo: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:latest"
+    imageDashboard: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-dashboard:latest"
     registryUsername: "${{ secrets.DOCKER_USERNAME }}"
     registryPassword: ${{ secrets.DOCKER_PASSWORD }}
     environmentName: "identitykeeperEnv"
@@ -33,10 +34,10 @@ jobs:
                 subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             - name: install extension az containerapp
               run: az extension add --name containerapp
-            - name: create ACA Environment
+            - name: create ACA-Environment
               run: |
                 az containerapp env create -g ${{ env.resourceGroupName }} -n ${{ env.environmentName }} --logs-destination none
-            - name: create ACA silo app
+            - name: create ACA silo 
               run: |
                 az containerapp create \
                     --resource-group ${{ env.resourceGroupName }} \
@@ -54,6 +55,19 @@ jobs:
                 --resource-group ${{ env.resourceGroupName }} \
                 --name ${{ env.appName }} \
                 --image ${{ env.imageApp }} \
+                --registry-server docker.io \
+                --registry-username ${{ env.registryUsername }} \
+                --registry-password ${{ env.registryPassword }} \
+                --target-port 8080 \
+                --ingress external \
+                --environment ${{ env.environmentName }} \
+                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}
+            - name: create ACA Dashboard
+              run: |
+                az containerapp create \
+                --resource-group ${{ env.resourceGroupName }} \
+                --name Dashboard \
+                --image ${{ env.imageDashboard }} \
                 --registry-server docker.io \
                 --registry-username ${{ env.registryUsername }} \
                 --registry-password ${{ env.registryPassword }} \
