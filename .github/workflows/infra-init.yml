@@ -2,6 +2,11 @@
 name: init ACA infrastructure
 
 on:
+    push:
+        branches:
+            - main
+        paths:
+            - ".github/workfflows/infra-init.yml"
     workflow_dispatch:
 
 permissions:
