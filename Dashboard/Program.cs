@@ -8,51 +8,45 @@ var builder = WebApplication.CreateBuilder();
 
 builder.Host.UseOrleans(siloBuilder =>
 {
-if (builder.Environment.IsDevelopment())
-{
-    builder.Host.UseOrleans(builder =>
+    if (builder.Environment.IsDevelopment())
     {
-        builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112))
-        .ConfigureEndpoints(IPAddress.Loopback, 11112, 30001)
-        .UseDashboard(op =>
+        builder.Host.UseOrleans(builder =>
         {
-            op.HostSelf = true;
-            op.Port = 8080;
-        });
-
-    }).ConfigureLogging(logging =>
-    {
-        logging.AddConsole();
-        logging.SetMinimumLevel(LogLevel.Warning);
-    });
-}
-else
-{
-    builder.Host.UseOrleans(builder =>
-    {
-        var envCnn = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-
-        var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
-        builder.UseAzureStorageClustering(options =>
-            options.ConfigureTableServiceClient(connectionString))
+            builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112))
+            .ConfigureEndpoints(IPAddress.Loopback, 11112, 30001)
             .UseDashboard(op =>
             {
-                op.Host = "*";
                 op.HostSelf = true;
                 op.Port = 8080;
             });
 
-        builder.Configure<ClusterOptions>(options =>
+        }).ConfigureLogging(logging =>
         {
-            options.ClusterId = "url-shortener";
-            options.ServiceId = "urls";
+            logging.AddConsole();
+            logging.SetMinimumLevel(LogLevel.Warning);
         });
-        
-    });
-}
-  
+    }
+    else
+    {
+        builder.Host.UseOrleans(builder =>
+        {
+            var envCnn = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+
+            var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
+            builder
+                .UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString))
+                .UseDashboard()
+                .Configure<ClusterOptions>(options =>
+            {
+                options.ClusterId = "url-shortener";
+                options.ServiceId = "urls";
+            });
+
+        });
+    }
+
 });
 
 var app = builder.Build();
-app.Map("/dashboard", x => x.UseOrleansDashboard());
+app.MapGet("/dashboard", () => Results.Ok("Dashboard"));
 app.Run();

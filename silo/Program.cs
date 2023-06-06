@@ -49,7 +49,7 @@ else
 
 var app = builder.Build();
 
-//app.MapGet("/", () => Results.Ok("Silo"));
+app.MapGet("/", () => Results.Ok("Silo"));
 //app.Map("/dashboard", x => x.UseOrleansDashboard());
 
 app.Run();
