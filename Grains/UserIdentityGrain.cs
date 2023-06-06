@@ -7,6 +7,9 @@ public class UserIdentityGrain : Grain, IUserIdentityGrain
     public UserIdentityGrain([PersistentState("user", "users")] IPersistentState<UserIdentity> state)
     {
         _state = state;
+        _state.State.Name = this.GetPrimaryKeyString();
+        _state.State.Email = "";
+        _state.State.ActionName = "Created";
     }
 
     Task<string> IUserIdentityGrain.GetActionName()

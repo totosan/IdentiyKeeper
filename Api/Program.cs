@@ -13,12 +13,13 @@ if (builder.Environment.IsDevelopment())
         builder.UseStaticClustering(new IPEndPoint(IPAddress.Loopback, 30000));
     });
     Console.WriteLine("configured host builder for development local");
-} else
+}
+else
 {
     builder.Host.UseOrleansClient(client =>
     {
         var envCnn = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-        
+
         var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
         client.UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString));
         client.Configure<ClusterOptions>(options =>
@@ -30,7 +31,7 @@ if (builder.Environment.IsDevelopment())
     {
         logging.AddConsole();
         logging.SetMinimumLevel(LogLevel.Warning);
-    }); 
+    });
     Console.WriteLine("configured host builder with Azure storage");
 }
 
@@ -68,20 +69,20 @@ app.MapGet("/go/{shortenedRouteSegment}",
         return Results.Redirect($"http://{url}");
     });
 
+// ---- user identity ----
+
 app.MapPost("/user",
     async (IGrainFactory grains, UserIdentity userIdentity) =>
     {
         // Create a grain for the user identity
         var userGrain = grains.GetGrain<IUserIdentityGrain>(userIdentity.Name);
 
-        if(userGrain.GetActionName().Result == "Create")
+        if (userGrain.GetActionName().Result == "Created")
         {
             return Results.BadRequest("User already exists");
         }
         // Set the user's name, email, and action name
-        await userGrain.SetName(userIdentity.Name);
-        await userGrain.SetEmail(userIdentity.Email);
-        await userGrain.SetActionName("Create");
+        await userGrain.SetEmail(userIdentity.Email ?? "");
 
         // Return the user's name, email, and action name
         return Results.Ok(new
@@ -91,25 +92,26 @@ app.MapPost("/user",
             ActionName = await userGrain.GetActionName()
         });
     });
-    app.MapPut("/user",
-    async (IGrainFactory grains, UserIdentity userIdentity) =>
+
+app.MapPut("/user",
+async (IGrainFactory grains, UserIdentity userIdentity) =>
+{
+    // Create a grain for the user identity
+    var userGrain = grains.GetGrain<IUserIdentityGrain>(userIdentity.Name);
+
+    // Set the user's name, email, and action name
+    await userGrain.SetName(userIdentity.Name);
+    await userGrain.SetEmail(userIdentity.Email);
+    await userGrain.SetActionName("Updated");
+
+    // Return the user's name, email, and action name
+    return Results.Ok(new
     {
-        // Create a grain for the user identity
-        var userGrain = grains.GetGrain<IUserIdentityGrain>(userIdentity.Name);
-
-        // Set the user's name, email, and action name
-        await userGrain.SetName(userIdentity.Name);
-        await userGrain.SetEmail(userIdentity.Email);
-        await userGrain.SetActionName("Update");
-
-        // Return the user's name, email, and action name
-        return Results.Ok(new
-        {
-            Name = await userGrain.GetName(),
-            Email = await userGrain.GetEmail(),
-            ActionName = await userGrain.GetActionName()
-        });
+        Name = await userGrain.GetName(),
+        Email = await userGrain.GetEmail(),
+        ActionName = await userGrain.GetActionName()
     });
+});
 
 app.MapGet("/user/{name}",
     async (IGrainFactory grains, string name) =>
@@ -124,6 +126,21 @@ app.MapGet("/user/{name}",
             Email = await userGrain.GetEmail(),
             ActionName = await userGrain.GetActionName()
         });
+    });
+
+
+//create a MapGet endpoint for a loadtest of creating 1000 users
+app.MapGet("/loadtest",
+    async (IGrainFactory grains) =>
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            // Create a grain for the user identity
+            var userGrain = grains.GetGrain<IUserIdentityGrain>($"loadtest{i}");
+            await userGrain.SetEmail($"loadtest{i}@mail.de");
+        }
+
+        return Results.Ok();
     });
 app.Run();
 // </Endpoints>
