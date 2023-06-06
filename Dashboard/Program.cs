@@ -12,8 +12,8 @@ builder.Host.UseOrleans(siloBuilder =>
     {
         builder.Host.UseOrleans(builder =>
         {
-            builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112))
-            .ConfigureEndpoints(IPAddress.Loopback, 11112, 30001)
+            builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111))
+            .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
             .UseDashboard(op =>
             {
                 op.HostSelf = true;
