@@ -1,6 +1,6 @@
 using Orleans.Runtime;
 
-[DontPlaceMeOnTheDashboard]
+
 public class UserIdentityGrain : Grain, IUserIdentityGrain
 {
     private readonly IPersistentState<UserIdentity> _state;

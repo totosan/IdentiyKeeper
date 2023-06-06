@@ -1,7 +1,7 @@
 using Orleans.Runtime;
 using Orleans.Configuration;
 
-[DontPlaceMeOnTheDashboard]
+
 public class UrlShortenerGrain : Grain, IUrlShortenerGrain
 {
     private readonly IPersistentState<UrlDetails> _state;
