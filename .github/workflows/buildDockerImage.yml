@@ -7,6 +7,7 @@ on:
       - 'Dockerfile.Silo'
       - 'Api/**'
       - 'silo/**'
+      - 'Dashboard/**'
   workflow_dispatch:
 
 permissions:
