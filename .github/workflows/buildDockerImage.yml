@@ -92,4 +92,4 @@ jobs:
               run: |
                 az containerapp update -n ${{ env.siloName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageSilo }}:${{ env.IMAGE_TAG }} && \
                 az containerapp update -n ${{ env.appName }} -g ${{ env.resourceGroupName }} --image ${{ env.imageApp }}:${{ env.IMAGE_TAG }} && \
-                az containerapp restart -n ${{ env.dashboardName }} -g ${{ env.resourceGroupName }} 
+                az containerapp update -n ${{ env.dashboardName }} -g ${{ env.resourceGroupName }} 
