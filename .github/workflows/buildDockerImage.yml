@@ -5,6 +5,7 @@ on:
     paths:
       - 'Dockerfile.Api'
       - 'Dockerfile.Silo'
+      - 'Dockerfile.Dashb'
       - 'Api/**'
       - 'silo/**'
       - 'Dashboard/**'
