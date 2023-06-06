@@ -1,11 +1,15 @@
 using Orleans.Runtime;
 
+
 public class UserIdentityGrain : Grain, IUserIdentityGrain
 {
     private readonly IPersistentState<UserIdentity> _state;
     public UserIdentityGrain([PersistentState("user", "users")] IPersistentState<UserIdentity> state)
     {
         _state = state;
+        _state.State.Name = this.GetPrimaryKeyString();
+        _state.State.Email = "";
+        _state.State.ActionName = "Created";
     }
 
     Task<string> IUserIdentityGrain.GetActionName()
