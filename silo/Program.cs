@@ -13,8 +13,8 @@ if (builder.Environment.IsDevelopment())
         .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
         .UseDashboard(op =>
         {
-            op.HostSelf = true;
-            op.Port = 8080;
+            op.HostSelf = false;
+            op.Port = 8083;
         });
 
         builder.AddMemoryGrainStorage("urls");

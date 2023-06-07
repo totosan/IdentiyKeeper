@@ -48,6 +48,29 @@
             }
         },
         {
+            "name": ".NET Core Launch (Dashboard)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildDashboard",
+            "program": "${workspaceFolder}/Dashboard/bin/Debug/net7.0/Dashboard.dll",
+            "args": [
+                "--urls",
+                "http://localhost:8083"
+            ],
+            "cwd": "${workspaceFolder}/Dashboard",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
@@ -55,9 +78,10 @@
     ],
     "compounds": [
         {
-            "name": "Silo & Api",
+            "name": "Silo & Api & Dashboard",
             "configurations": [
                 ".NET Core Launch (Silo)",
+                ".NET Core Launch (Dashboard)",
                 ".NET Core Launch (Api)"
             ]
         }

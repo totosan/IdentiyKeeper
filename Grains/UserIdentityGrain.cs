@@ -7,9 +7,18 @@ public class UserIdentityGrain : Grain, IUserIdentityGrain
     public UserIdentityGrain([PersistentState("user", "users")] IPersistentState<UserIdentity> state)
     {
         _state = state;
+
+    }
+    public override Task OnActivateAsync(CancellationToken ct = default)
+    {
+           if(_state.State == null)
+        {
+            _state.State = new UserIdentity();
+        }
         _state.State.Name = this.GetPrimaryKeyString();
         _state.State.Email = "";
         _state.State.ActionName = "Created";
+             return _state.ReadStateAsync();
     }
 
     Task<string> IUserIdentityGrain.GetActionName()

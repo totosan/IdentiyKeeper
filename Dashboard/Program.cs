@@ -39,7 +39,7 @@ builder.Host.UseOrleans((Action<ISiloBuilder>)(siloBuilder =>
 }));
 //builder.Services.DontHostGrainsHere();
 var app = builder.Build();
-app.Map("/dashboard", d => d.UseOrleansDashboard());
+app.Map("/d", d => d.UseOrleansDashboard());
 app.Run();
 
 static void InitDevelopment(WebApplicationBuilder builder)
@@ -47,11 +47,11 @@ static void InitDevelopment(WebApplicationBuilder builder)
     builder.Host.UseOrleans(builder =>
     {
         builder.UseDevelopmentClustering(primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111))
-        .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
+        .ConfigureEndpoints(IPAddress.Loopback, 11112, 30001)
         .UseDashboard(op =>
         {
-            op.HostSelf = true;
-            op.Port = 8080;
+            op.HostSelf = false;
+            op.Port = 8083;
         });
 
     }).ConfigureLogging(logging =>
