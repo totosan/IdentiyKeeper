@@ -37,7 +37,7 @@ else
             options.ConfigureTableServiceClient(connectionString))
             .AddAzureTableGrainStorage("urls", options => options.ConfigureTableServiceClient(connectionString))
             .AddAzureTableGrainStorage("users", options => options.ConfigureTableServiceClient(connectionString))
-            .UseDashboard(op => op.HostSelf = false);
+            .UseDashboard(op => {});
 
         builder.Configure<ClusterOptions>(options =>
         {

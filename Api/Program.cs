@@ -133,7 +133,6 @@ app.MapGet("/user/{name}",
 app.MapGet("/loadtest",
     async (IGrainFactory grains) =>
     {
-        var tasks = new List<Task>();
         // Create 1000 user identities
         for (int i = 0; i < 1000; i++)
         {
@@ -141,7 +140,7 @@ app.MapGet("/loadtest",
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
 
             // Set the initial email address for the user
-            tasks.Add( userGrain.SetEmail($"user{i}@mail.com"));
+            await userGrain.SetEmail($"user{i}@mail.com");
 
             // Randomly change the email address for the user 1000 times
             for (int j = 0; j < 1000; j++)
@@ -150,11 +149,9 @@ app.MapGet("/loadtest",
                 var randomEmail = $"{Guid.NewGuid().ToString().Substring(0, 8)}@mail.com";
 
                 // Set the new email address for the user
-                tasks.Add( userGrain.SetEmail(randomEmail));
+                await userGrain.SetEmail(randomEmail);
             }
         }
-
-        Task.WhenAll(tasks).Wait();
         return Results.Ok();
     });
 app.Run();
