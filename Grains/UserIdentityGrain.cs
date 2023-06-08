@@ -9,20 +9,6 @@ public class UserIdentityGrain : Grain, IUserIdentityGrain
         _state = state;
 
     }
-    public override Task OnActivateAsync(CancellationToken ct = default)
-    {
-        // if (_state.State == null || _state.State.Name == null || _state.State.Name == "")
-        // {
-        //     _state.State = new UserIdentity()
-        //     {
-        //         Name = this.GetPrimaryKeyString(),
-        //         Email = "",
-        //         ActionName = "Created"
-        //     };
-        //    return _state.WriteStateAsync();
-        // }
-        return _state.ReadStateAsync();
-    }
         Task<string> IUserIdentityGrain.GetActionName()
     {
             return Task.FromResult(_state.State.ActionName ?? "");
