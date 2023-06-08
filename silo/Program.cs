@@ -13,7 +13,7 @@ if (builder.Environment.IsDevelopment())
         .ConfigureEndpoints(IPAddress.Loopback, 11111, 30000)
         .UseDashboard(op =>
         {
-            op.HostSelf = false;
+            op.HostSelf = true;
             op.Port = 8083;
         });
 
@@ -37,7 +37,14 @@ else
             options.ConfigureTableServiceClient(connectionString))
             .AddAzureTableGrainStorage("urls", options => options.ConfigureTableServiceClient(connectionString))
             .AddAzureTableGrainStorage("users", options => options.ConfigureTableServiceClient(connectionString))
-            .UseDashboard(op => {});
+            .UseDashboard(op => {
+                op.HostSelf = false;
+                op.Port = 8083;
+            });
+        builder.Configure<SiloOptions>(options =>
+        {
+            options.SiloName = "usersSilo";
+        });
 
         builder.Configure<ClusterOptions>(options =>
         {
@@ -48,7 +55,7 @@ else
 }
 
 var app = builder.Build();
-
+app.Urls.Add("http://localhost:8080");
 app.MapGet("/", () => Results.Ok("Silo"));
 //app.Map("/dashboard", x => x.UseOrleansDashboard());
 

@@ -1,6 +1,6 @@
 using Orleans.Runtime;
 
-
+[CollectionAgeLimit(Minutes = 2)]
 public class UserIdentityGrain : Grain, IUserIdentityGrain
 {
     private readonly IPersistentState<UserIdentity> _state;
@@ -11,54 +11,56 @@ public class UserIdentityGrain : Grain, IUserIdentityGrain
     }
     public override Task OnActivateAsync(CancellationToken ct = default)
     {
-           if(_state.State == null)
-        {
-            _state.State = new UserIdentity();
+        // if (_state.State == null || _state.State.Name == null || _state.State.Name == "")
+        // {
+        //     _state.State = new UserIdentity()
+        //     {
+        //         Name = this.GetPrimaryKeyString(),
+        //         Email = "",
+        //         ActionName = "Created"
+        //     };
+        //    return _state.WriteStateAsync();
+        // }
+        return _state.ReadStateAsync();
+    }
+        Task<string> IUserIdentityGrain.GetActionName()
+    {
+            return Task.FromResult(_state.State.ActionName ?? "");
         }
-        _state.State.Name = this.GetPrimaryKeyString();
-        _state.State.Email = "";
-        _state.State.ActionName = "Created";
-             return _state.ReadStateAsync();
-    }
 
-    Task<string> IUserIdentityGrain.GetActionName()
+        Task<string> IUserIdentityGrain.GetEmail()
     {
-        return Task.FromResult(_state.State.ActionName??"");
-    }
+            return Task.FromResult(_state.State.Email ?? "");
+        }
 
-    Task<string> IUserIdentityGrain.GetEmail()
+        Task<string> IUserIdentityGrain.GetName()
     {
-        return Task.FromResult(_state.State.Email ?? "");
-    }
+            return Task.FromResult(_state.State.Name ?? "");
+        }
 
-    Task<string> IUserIdentityGrain.GetName()
+        Task IUserIdentityGrain.SetActionName(string actionName)
     {
-        return Task.FromResult(_state.State.Name ?? "");
-    }
+            _state.State.ActionName = actionName;
+            return _state.WriteStateAsync();
+        }
 
-    Task IUserIdentityGrain.SetActionName(string actionName)
+        Task IUserIdentityGrain.SetEmail(string email)
     {
-        _state.State.ActionName = actionName;
-        return _state.WriteStateAsync();
-    }
+            _state.State.Email = email;
+            return _state.WriteStateAsync();
+        }
 
-    Task IUserIdentityGrain.SetEmail(string email)
+        Task IUserIdentityGrain.SetName(string name)
     {
-        _state.State.Email = email;
-        return _state.WriteStateAsync();
+            _state.State.Name = name;
+            return _state.WriteStateAsync();
+        }
     }
 
-    Task IUserIdentityGrain.SetName(string name)
+    [GenerateSerializer]
+    public class UserIdentity
     {
-        _state.State.Name = name;
-        return _state.WriteStateAsync();
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? ActionName { get; set; }
     }
-}
-
-[GenerateSerializer]
-public class UserIdentity
-{
-    public string? Name { get; set; }
-    public string? Email { get; set; }
-    public string? ActionName { get; set; }
-}

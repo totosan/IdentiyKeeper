@@ -81,6 +81,7 @@ app.MapPost("/user",
         {
             return Results.BadRequest("User already exists");
         }
+        await userGrain.SetName(userIdentity.Name);
         // Set the user's name, email, and action name
         await userGrain.SetEmail(userIdentity.Email ?? "");
 
@@ -134,16 +135,17 @@ app.MapGet("/loadtest",
     async (IGrainFactory grains) =>
     {
         // Create 1000 user identities
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100; i++)
         {
             // Create a grain for the user identity
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
 
+            await userGrain.SetName($"user{i}");
             // Set the initial email address for the user
             await userGrain.SetEmail($"user{i}@mail.com");
 
             // Randomly change the email address for the user 1000 times
-            for (int j = 0; j < 1000; j++)
+            for (int j = 0; j < 100; j++)
             {
                 // Generate a random email address
                 var randomEmail = $"{Guid.NewGuid().ToString().Substring(0, 8)}@mail.com";
