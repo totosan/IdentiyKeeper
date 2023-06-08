@@ -1,0 +1,43 @@
+name: Delete ContainerApp All
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+env:
+    resourceGroupName: "ORLEANS-ACA"
+    location: "westeurope"
+    appName: "identitykeeper-app"
+    siloName: "identitykeeper-server"
+    dashboardName: "identitykeeper-dashboard"
+    imageApp: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-client:latest"
+    imageSilo: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-server:latest"
+    imageDashboard: "${{ secrets.DOCKER_USERNAME }}/identitykeeper-dashboard:latest"
+    registryUsername: "${{ secrets.DOCKER_USERNAME }}"
+    registryPassword: ${{ secrets.DOCKER_PASSWORD }}
+    environmentName: "identitykeeperEnv"
+    AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+
+jobs:
+    delete:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Azure Login
+              uses: Azure/login@v1.4.6
+              with:
+                client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            - name: install extension az containerapp
+              run: az extension add --name containerapp
+            - name: Delete App
+              run: az containerapp delete --resource-group ${{ env.resourceGroupName }} --name ${{ env.appName }} --yes
+            - name: Delete Silo
+              run: az containerapp delete --resource-group ${{ env.resourceGroupName }} --name ${{ env.siloName }} --yes
+            - name: Delete Dashboard
+              run: az containerapp delete --resource-group ${{ env.resourceGroupName }} --name ${{ env.dashboardName }} --yes
+            - name: Delete Environment
+              run: az containerapp env delete --resource-group ${{ env.resourceGroupName }} --name ${{ env.environmentName }} --yes
