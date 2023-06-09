@@ -68,7 +68,7 @@ jobs:
                 --target-port 8080 \
                 --ingress external \
                 --environment ${{ env.environmentName }} \
-                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}\
+                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }} \
                 --revision-suffix "v1"
             - name: create ACA Dashboard
               run: |
@@ -82,5 +82,5 @@ jobs:
                 --target-port 8080 \
                 --ingress external \
                 --environment ${{ env.environmentName }} \
-                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}\
+                --env-vars "AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }} \
                 --revision-suffix "v1"
