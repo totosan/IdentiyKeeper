@@ -16,8 +16,7 @@ if (builder.Environment.IsDevelopment())
             op.HostSelf = true;
             op.Port = 8083;
         });
-
-        builder.AddMemoryGrainStorage("urls");
+        
         builder.AddMemoryGrainStorage("users");
 
     }).ConfigureLogging(logging =>
@@ -35,7 +34,6 @@ else
         var connectionString = envCnn ?? throw new InvalidOperationException("Missing connection string");
         builder.UseAzureStorageClustering(options =>
             options.ConfigureTableServiceClient(connectionString))
-            .AddAzureTableGrainStorage("urls", options => options.ConfigureTableServiceClient(connectionString))
             .AddAzureTableGrainStorage("users", options => options.ConfigureTableServiceClient(connectionString))
             .UseDashboard(op => {
                 op.HostSelf = false;
@@ -48,8 +46,8 @@ else
 
         builder.Configure<ClusterOptions>(options =>
         {
-            options.ClusterId = "url-shortener";
-            options.ServiceId = "urls";
+            options.ClusterId = "identitykeeper";
+            options.ServiceId = "identity";
         });
     });
 }

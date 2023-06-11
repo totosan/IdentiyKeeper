@@ -24,8 +24,8 @@ else
         client.UseAzureStorageClustering(options => options.ConfigureTableServiceClient(connectionString));
         client.Configure<ClusterOptions>(options =>
         {
-            options.ClusterId = "url-shortener";
-            options.ServiceId = "urls";
+            options.ClusterId = "identitykeeper";
+            options.ServiceId = "identity";
         });
     }).ConfigureLogging(logging =>
     {
@@ -40,34 +40,6 @@ var app = builder.Build();
 
 // <Endpoints>
 app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/shorten/{redirect}",
-    async (IGrainFactory grains, HttpRequest request, string redirect) =>
-    {
-        // Create a unique, short ID
-        var shortenedRouteSegment = Guid.NewGuid().GetHashCode().ToString("X");
-
-        // Create and persist a grain with the shortened ID and full URL
-        var shortenerGrain = grains.GetGrain<IUrlShortenerGrain>(shortenedRouteSegment);
-        await shortenerGrain.SetUrl(redirect);
-
-        // Return the shortened URL for later use
-        var resultBuilder = new UriBuilder($"{request.Scheme}://{request.Host.Value}")
-        {
-            Path = $"/go/{shortenedRouteSegment}"
-        };
-        return Results.Ok(resultBuilder.Uri);
-    });
-
-app.MapGet("/go/{shortenedRouteSegment}",
-    async (IGrainFactory grains, string shortenedRouteSegment) =>
-    {
-        // Retrieve the grain using the shortened ID and redirect to the original URL        
-        var shortenerGrain = grains.GetGrain<IUrlShortenerGrain>(shortenedRouteSegment);
-        var url = await shortenerGrain.GetUrl();
-
-        return Results.Redirect($"http://{url}");
-    });
 
 // ---- user identity ----
 
@@ -134,12 +106,12 @@ app.MapGet("/user/{name}",
 app.MapGet("/loadtest",
     async (IGrainFactory grains) =>
     {
-        // Create 1000 user identities
+        // Create 100 user identities
         for (int i = 0; i < 100; i++)
         {
             // Create a grain for the user identity
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
-
+            
             await userGrain.SetName($"user{i}");
             // Set the initial email address for the user
             await userGrain.SetEmail($"user{i}@mail.com");
@@ -156,5 +128,21 @@ app.MapGet("/loadtest",
         }
         return Results.Ok();
     });
+
+app.MapGet("/clear",
+    async (IGrainFactory grains) =>
+    {
+        // get 100 user identities
+        for (int i = 0; i < 100; i++)
+        {
+            // get a grain for the user identity
+            var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
+
+            await userGrain.ClearState();
+        }
+        return Results.Ok();
+    });
+
+
 app.Run();
 // </Endpoints>

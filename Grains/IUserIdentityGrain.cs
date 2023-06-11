@@ -8,4 +8,6 @@ public interface IUserIdentityGrain : IGrainWithStringKey
     
     Task<string> GetActionName();
     Task SetActionName(string actionName);
+
+    Task ClearState();
 }
