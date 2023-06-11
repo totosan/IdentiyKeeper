@@ -78,6 +78,13 @@
     ],
     "compounds": [
         {
+            "name": "Silo & Api",
+            "configurations": [
+                ".NET Core Launch (Silo)",
+                ".NET Core Launch (Api)"
+            ]
+        },
+        {
             "name": "Silo & Api & Dashboard",
             "configurations": [
                 ".NET Core Launch (Silo)",

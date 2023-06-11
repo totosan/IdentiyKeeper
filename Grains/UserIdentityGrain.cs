@@ -49,8 +49,8 @@ public class UserIdentityGrain : Grain, IUserIdentityGrain
     Task IUserIdentityGrain.SetName(string name)
     {
         var registry = this.GrainFactory.GetGrain<IUserRegistryGrain>(0);
-        if(_state.State.Name != null)
-            registry.AddUser(_state.State.Name);
+        if(_state.State.Name == null)
+            registry.AddUser(name);
 
         _state.State.Name = name;
         return _state.WriteStateAsync();

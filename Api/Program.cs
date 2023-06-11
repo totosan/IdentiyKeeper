@@ -85,6 +85,15 @@ async (IGrainFactory grains, UserIdentity userIdentity) =>
         ActionName = await userGrain.GetActionName()
     });
 });
+app.MapGet("/users",
+    async (IGrainFactory grains) =>
+    {
+        // Retrieve the user's grain
+        var registry = grains.GetGrain<IUserRegistryGrain>(0);
+        var users = await registry.GetUsers();
+        // Return the user's name, email, and action name
+        return Results.Ok(users);
+    });
 
 app.MapGet("/user/{name}",
     async (IGrainFactory grains, string name) =>
@@ -107,11 +116,11 @@ app.MapGet("/loadtest",
     async (IGrainFactory grains) =>
     {
         // Create 100 user identities
-        for (int i = 0; i < 100; i++)
+        Parallel.For(0, 100, async i =>
         {
             // Create a grain for the user identity
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
-            
+
             await userGrain.SetName($"user{i}");
             // Set the initial email address for the user
             await userGrain.SetEmail($"user{i}@mail.com");
@@ -125,7 +134,7 @@ app.MapGet("/loadtest",
                 // Set the new email address for the user
                 await userGrain.SetEmail(randomEmail);
             }
-        }
+        });
         return Results.Ok();
     });
 

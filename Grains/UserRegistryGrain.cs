@@ -6,7 +6,7 @@ public class UserRegistryGrain : IGrain, IUserRegistryGrain
 {
     private readonly IPersistentState<UserRegistry> _state;
 
-    public UserRegistryGrain([PersistentState("ureg","uregStore")]IPersistentState<UserRegistry> state)
+    public UserRegistryGrain([PersistentState("ureg","users")]IPersistentState<UserRegistry> state)
     {
         _state = state;
     }
