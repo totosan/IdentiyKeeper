@@ -55,6 +55,6 @@ else
 var app = builder.Build();
 app.Urls.Add("http://localhost:8080");
 app.MapGet("/", () => Results.Ok("Silo"));
-//app.Map("/dashboard", x => x.UseOrleansDashboard());
+
 
 app.Run();

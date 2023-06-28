@@ -35,9 +35,18 @@ else
     Console.WriteLine("configured host builder with Azure storage");
 }
 
-var app = builder.Build();
 // </Configuration>
+builder.Services
+  .AddEndpointsApiExplorer()
+  .AddSwaggerGen();
 
+var app = builder.Build();
+
+app.UseSwagger().UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = "";
+});
 // <Endpoints>
 app.MapGet("/", () => "Hello World!");
 
@@ -56,7 +65,8 @@ app.MapPost("/user",
         await userGrain.SetName(userIdentity.Name);
         // Set the user's name, email, and action name
         await userGrain.SetEmail(userIdentity.Email ?? "");
-
+        await userGrain.SetActionName("Created");
+        
         // Return the user's name, email, and action name
         return Results.Ok(new
         {
