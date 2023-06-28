@@ -126,7 +126,7 @@ app.MapGet("/loadtest",
     async (IGrainFactory grains) =>
     {
         // Create 100 user identities
-        Parallel.For(0, 100, async i =>
+        Parallel.For(0, 1000000, async i =>
         {
             // Create a grain for the user identity
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
@@ -134,7 +134,7 @@ app.MapGet("/loadtest",
             await userGrain.SetName($"user{i}");
 
             // Randomly change the email address for the user 1000 times
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 1000000; j++)
             {
                 // Generate a random email address
                 var randomEmail = $"{Guid.NewGuid().ToString().Substring(0, 8)}@mail.com";
@@ -150,7 +150,7 @@ app.MapGet("/clear",
     async (IGrainFactory grains) =>
     {
         // get 100 user identities
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1000; i++)
         {
             // get a grain for the user identity
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");

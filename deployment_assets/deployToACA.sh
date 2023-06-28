@@ -2,6 +2,7 @@ resourceGroupName="ORLEANS-ACA"
 location="westeurope"
 appName="identitykeeper-app"
 siloName="identitykeeper-server"
+dashboardName="identitykeeper-dashboard"
 imageApp="totosan/identitykeeper-client:latest"
 imageSilo="totosan/identitykeeper-server:latest"
 imageDashboard="totosan/identitykeeper-dashboard:latest"
@@ -38,7 +39,7 @@ az containerapp create \
     # Dashboard
 az containerapp create \
     --resource-group $resourceGroupName \
-    --name $appName \
+    --name $dashboardName \
     --image $imageDashboard \
     --registry-server docker.io \
     --registry-username $registryUsername \
