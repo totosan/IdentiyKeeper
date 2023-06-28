@@ -1,13 +1,12 @@
 using Orleans.Runtime;
 
-//[CollectionAgeLimit(Minutes = 2)]
+[CollectionAgeLimit(Minutes = 10)]
 public class UserIdentityGrain : Grain, IUserIdentityGrain
 {
     private readonly IPersistentState<UserIdentity> _state;
     public UserIdentityGrain([PersistentState("user", "users")] IPersistentState<UserIdentity> state)
     {
         _state = state;
-
     }
 
     public Task ClearState()

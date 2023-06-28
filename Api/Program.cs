@@ -132,8 +132,6 @@ app.MapGet("/loadtest",
             var userGrain = grains.GetGrain<IUserIdentityGrain>($"user{i}");
 
             await userGrain.SetName($"user{i}");
-            // Set the initial email address for the user
-            await userGrain.SetEmail($"user{i}@mail.com");
 
             // Randomly change the email address for the user 1000 times
             for (int j = 0; j < 100; j++)
